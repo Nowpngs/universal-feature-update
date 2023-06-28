@@ -3,6 +3,7 @@ import os
 
 try:
     from openpyxl.reader.excel import load_workbook
+    from openpyxl.styles import PatternFill
 except ImportError:
     raise SystemExit(
         "Process terminated: openpyxl module not found. Please make sure it is installed."
@@ -10,15 +11,17 @@ except ImportError:
 
 
 class UniversalUpdateFeature:
-    destination_project_path = ""  # input path of the destination project
-    source_project_path = ""  # input path of the source project
-    ssh_key_path = ""  # input path of ssh key (codium gitlab)
-    feature_name = "" # input feature name from the update_feature folder
-
+    destination_project_path = ""
+    ssh_key_path = ""
+    feature_name = ""
     work_book = None
     remote_repo_name = set()
 
-    def __init__(self):
+    def __init__(self, destination_project_path, ssh_key_path, feature_name):
+        self.destination_project_path = destination_project_path
+        self.ssh_key_path = ssh_key_path
+        self.feature_name = feature_name
+
         self.load_feature_excel()
         self.check_path()
         self.fetch_destination_origin()
@@ -150,7 +153,3 @@ class UniversalUpdateFeature:
                     raise SystemExit(
                         f"Process terminated: Remove remote {remote_name} failed"
                     )
-
-
-# Run the program
-UniversalUpdateFeature()
