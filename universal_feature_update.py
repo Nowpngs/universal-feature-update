@@ -27,14 +27,15 @@ class UniversalUpdateFeature:
         self.feature_name = feature_name
         self.project_name = project_name
         self.process()
+        ColorText.print_ok_info(f"Perfect! Operation Completed!")
 
     def process(self):
         self.load_feature_excel()
         self.check_path()
         self.fetch_destination_origin()
         self.get_remote_repo_name()
-        self.create_new_branch_destination()
         self.fetch_source_origin()
+        self.create_new_branch_destination()
         self.process_cherry_pick()
         self.remove_remote_source()
 
@@ -48,18 +49,23 @@ class UniversalUpdateFeature:
                 filename=f"{self.project_name}/{self.feature_name}/{self.feature_name}.xlsx"
             )
         except FileNotFoundError:
-            raise SystemExit("Process terminated: Feature excel file not found.")
+            raise SystemExit(ColorText.color_error("Feature excel file not found."))
 
     def check_path(self):
+        ColorText.print_ok_info(
+            f"Cheking Destination Path {self.destination_project_path}"
+        )
         # check if the path to folder exists
         if not os.path.exists(self.destination_project_path):
-            raise SystemExit("Process terminated: Path does not exist")
+            raise SystemExit(ColorText.color_error("Path does not exist"))
 
+        ColorText.print_ok_info(f"Cheking SSH Key Path {self.ssh_key_path}")
         # check if the path to ssh key exists
         if not os.path.exists(self.ssh_key_path):
-            raise SystemExit("Process terminated: Path does not exist")
+            raise SystemExit(ColorText.color_error("Path does not exist"))
 
     def fetch_destination_origin(self):
+        ColorText.print_ok_info(f"Fetch Destination Origin")
         # fetch and create new branch on destination project
         try:
             subprocess.run(
@@ -74,22 +80,34 @@ class UniversalUpdateFeature:
                 ["git", "restore", "."], check=True, cwd=self.destination_project_path
             )
             subprocess.run(
-                ["git", "checkout", "origin/main"],
+                ["git", "branch", "-a"], check=True, cwd=self.destination_project_path
+            )
+
+            selected_branch = input("Input Select Branch (Enter for origin/main):")
+            if not selected_branch:
+                selected_branch = "origin/main"
+
+            subprocess.run(
+                ["git", "checkout", selected_branch],
                 check=True,
                 cwd=self.destination_project_path,
             )
         except subprocess.CalledProcessError:
-            raise SystemExit("Process terminated: Fetch and Create branch failed")
+            raise SystemExit(ColorText.color_error("Fetch and Create branch failed"))
 
     def get_remote_repo_name(self):
+        ColorText.print_ok_info(f"Get Remote Repo From {self.feature_name}.xlsx")
         # get remote repo name
         for row in self.work_book["Sheet1"]["B"]:
             self.remote_repo_name.add(row.value)
 
         if len(self.remote_repo_name) == 0:
-            raise SystemExit("Process terminated: Remote repo name not found.")
+            raise SystemExit(
+                ColorText.color_error("Remote repo name not found in Excel.")
+            )
 
     def fetch_source_origin(self):
+        ColorText.print_ok_info(f"Fetch Remote Repo")
         # fetch and add remote for the source project
         for index, repo_name in enumerate(self.remote_repo_name):
             try:
@@ -112,10 +130,13 @@ class UniversalUpdateFeature:
             except subprocess.CalledProcessError:
                 self.remove_remote_source()
                 raise SystemExit(
-                    f"Process terminated: Fetch failed, Repo name: {repo_name} Not Exist"
+                    ColorText.color_error(
+                        f"Fetch failed, Repo name: {repo_name} Not Exist"
+                    )
                 )
 
     def create_new_branch_destination(self):
+        ColorText.print_ok_info(f"Create New Branch {self.feature_name}")
         # create new branch
         try:
             subprocess.run(
@@ -130,7 +151,7 @@ class UniversalUpdateFeature:
             )
         except subprocess.CalledProcessError:
             self.remove_remote_source()
-            raise SystemExit("Process terminated: Create branch failed")
+            raise SystemExit(ColorText.color_error("Create branch failed"))
 
     def process_cherry_pick(self):
         for row in self.work_book["Sheet1"]["C"]:
@@ -149,6 +170,7 @@ class UniversalUpdateFeature:
         for remote_name in existing_remotes:
             if remote_name != "origin":
                 try:
+                    ColorText.print_ok_info(f"Remove Remote Source {remote_name}")
                     subprocess.run(
                         [
                             "git",
@@ -161,5 +183,5 @@ class UniversalUpdateFeature:
                     )
                 except subprocess.CalledProcessError:
                     raise SystemExit(
-                        f"Process terminated: Remove remote {remote_name} failed"
+                        ColorText.color_error(f"Remove remote {remote_name} failed")
                     )
