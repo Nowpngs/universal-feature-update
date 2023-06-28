@@ -10,7 +10,7 @@ ssh_key_path = ""
 # input the folder name that contains the feature file
 project_name = ""
 
-# input feature name from the update_feature folder
+# input feature name under the project folder
 feature_name = ""
 
 
