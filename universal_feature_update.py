@@ -1,5 +1,6 @@
 import subprocess
 import os
+from color_text import ColorText
 
 try:
     from openpyxl.reader.excel import load_workbook
@@ -14,14 +15,20 @@ class UniversalUpdateFeature:
     destination_project_path = ""
     ssh_key_path = ""
     feature_name = ""
+    project_name = ""
     work_book = None
     remote_repo_name = set()
 
-    def __init__(self, destination_project_path, ssh_key_path, feature_name):
+    def __init__(
+        self, destination_project_path, ssh_key_path, feature_name, project_name
+    ):
         self.destination_project_path = destination_project_path
         self.ssh_key_path = ssh_key_path
         self.feature_name = feature_name
+        self.project_name = project_name
+        self.process()
 
+    def process(self):
         self.load_feature_excel()
         self.check_path()
         self.fetch_destination_origin()
@@ -33,20 +40,15 @@ class UniversalUpdateFeature:
 
     def load_feature_excel(self):
         # load feature excel
+        ColorText.print_ok_info(
+            f"Loading Feature {self.feature_name} For {self.project_name}"
+        )
         try:
             self.work_book = load_workbook(
-                filename=f"{self.feature_name}/{self.feature_name}.xlsx"
+                filename=f"{self.project_name}/{self.feature_name}/{self.feature_name}.xlsx"
             )
         except FileNotFoundError:
             raise SystemExit("Process terminated: Feature excel file not found.")
-
-    def get_remote_repo_name(self):
-        # get remote repo name
-        for row in self.work_book["Sheet1"]["B"]:
-            self.remote_repo_name.add(row.value)
-
-        if len(self.remote_repo_name) == 0:
-            raise SystemExit("Process terminated: Remote repo name not found.")
 
     def check_path(self):
         # check if the path to folder exists
@@ -69,15 +71,23 @@ class UniversalUpdateFeature:
                 ["git", "fetch", "--all"], check=True, cwd=self.destination_project_path
             )
             subprocess.run(
+                ["git", "restore", "."], check=True, cwd=self.destination_project_path
+            )
+            subprocess.run(
                 ["git", "checkout", "origin/main"],
                 check=True,
                 cwd=self.destination_project_path,
             )
-            subprocess.run(
-                ["git", "restore", "."], check=True, cwd=self.destination_project_path
-            )
         except subprocess.CalledProcessError:
             raise SystemExit("Process terminated: Fetch and Create branch failed")
+
+    def get_remote_repo_name(self):
+        # get remote repo name
+        for row in self.work_book["Sheet1"]["B"]:
+            self.remote_repo_name.add(row.value)
+
+        if len(self.remote_repo_name) == 0:
+            raise SystemExit("Process terminated: Remote repo name not found.")
 
     def fetch_source_origin(self):
         # fetch and add remote for the source project
