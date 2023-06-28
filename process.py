@@ -20,4 +20,4 @@ UniversalUpdateFeature(
     ssh_key_path=ssh_key_path,
     feature_name=feature_name,
     project_name=project_name,
-)
+).process()

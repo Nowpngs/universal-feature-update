@@ -26,8 +26,6 @@ class UniversalUpdateFeature:
         self.ssh_key_path = ssh_key_path
         self.feature_name = feature_name
         self.project_name = project_name
-        self.process()
-        ColorText.print_ok_info(f"Perfect! Operation Completed!")
 
     def process(self):
         self.load_feature_excel()
@@ -38,6 +36,7 @@ class UniversalUpdateFeature:
         self.create_new_branch_destination()
         self.process_cherry_pick()
         self.remove_remote_source()
+        ColorText.print_ok_info(f"Perfect! Operation Completed!")
 
     def load_feature_excel(self):
         # load feature excel
