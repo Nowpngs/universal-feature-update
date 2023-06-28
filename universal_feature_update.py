@@ -99,11 +99,15 @@ class UniversalUpdateFeature:
         ColorText.print_ok_info(f"Get Remote Repo From {self.feature_name}.xlsx")
         # get remote repo name
         for row in self.work_book["Sheet1"]["B"]:
+            if row.row == 1:
+                continue
             self.remote_repo_name.add(row.value)
 
         if len(self.remote_repo_name) == 0:
             raise SystemExit(
-                ColorText.color_error("Remote repo name not found in Excel.")
+                ColorText.color_error(
+                    f"No remote repo name found in {self.feature_name}.xlsx"
+                )
             )
 
     def fetch_source_origin(self):
