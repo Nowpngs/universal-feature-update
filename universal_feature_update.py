@@ -212,6 +212,7 @@ class UniversalUpdateFeature:
                 f"{os.path.expanduser('~')}/Desktop/result_{self.feature_name}.xlsx"
             )
         except PermissionError:
+            self.remove_remote_source(self)
             raise SystemExit(
                 ColorText.color_error(
                     f"Save result excel failed, Please close result_{self.feature_name}.xlsx"
