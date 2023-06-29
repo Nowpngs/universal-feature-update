@@ -15,17 +15,13 @@ class UniversalUpdateFeature:
     destination_project_path = ""
     ssh_key_path = ""
     feature_name = ""
-    project_name = ""
     work_book = None
     remote_repo_name = set()
 
-    def __init__(
-        self, destination_project_path, ssh_key_path, feature_name, project_name
-    ):
+    def __init__(self, destination_project_path, ssh_key_path, feature_name):
         self.destination_project_path = destination_project_path
         self.ssh_key_path = ssh_key_path
         self.feature_name = feature_name
-        self.project_name = project_name
 
     def process(self):
         self.load_feature_excel()
@@ -40,12 +36,10 @@ class UniversalUpdateFeature:
 
     def load_feature_excel(self):
         # load feature excel
-        ColorText.print_ok_info(
-            f"Loading Feature {self.feature_name} For {self.project_name}"
-        )
+        ColorText.print_ok_info(f"Loading Feature {self.feature_name}")
         try:
             self.work_book = load_workbook(
-                filename=f"{self.project_name}/{self.feature_name}/{self.feature_name}.xlsx"
+                filename=f"feature_xlsx/{self.feature_name}/{self.feature_name}.xlsx"
             )
         except FileNotFoundError:
             raise SystemExit(ColorText.color_error("Feature excel file not found."))

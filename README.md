@@ -28,17 +28,18 @@ pip install openpyxl
 
 ## Usage
 
-1. Open the `process.py` file in a text editor.
-2. Set the following variables in the `process.py` script according to your needs:
+1. Create the folder name `feature_xlsx` in the destination project directory
+2. in the `feature_xlsx` folder create the feature name directory and stored the feature.xlsx inside (must be same)
+3. Open the `process.py` file in a text editor.
+4. Set the following variables in the `process.py` script according to your needs:
 
    - `destination_project_path`: The input path of the destination project where you want to deploy the feature. Provide the absolute path to the project directory
    - `ssh_key_path`: The input path of the SSH key for the destination project. Provide the absolute path to the SSH key file.
-   - `project_name`: The name of the folder that contains the feature file. This folder should be present in the repository.
-   - `feature_name`: The name of the feature file you want to cherry-pick. This file should be located under `project_name` folder.
+   - `feature_name`: The name of the feature file you want to cherry-pick. This file should be located under `feature_xlsx` folder in destination project.
 
-3. Save the process.py file.
-4. Open a terminal and navigate to the root directory of the cloned repository.
-5. Run the following command to execute the `process.py` script:
+5. Save the process.py file.
+6. Open a terminal and navigate to the root directory of the cloned repository.
+7. Run the following command to execute the `process.py` script:
 
 ```sh
 python3 process.py
@@ -52,9 +53,8 @@ Please ensure that you have the necessary permissions and access rights to both 
 
 - This tool currently does not support cherry-picking from your own repository. However, you can use it to cherry-pick features from other GitHub or Gitlab repositories.
 - Make sure to provide accurate and valid paths for the `destination_project_path` and `ssh_key_path` variables to ensure successful deployment.
-- The `project_name` should correspond to the folder name where the feature file is located within the repository.
-- The `feature_name` should match the name of the feature file located in the `project_name` folder.
-- Make sure the excel file is the same name as `feature_name`
+- The `feature_name` should match the name of the feature file located in the `feature_xlsx` in the destination project folder.
+- Make sure the excel file and directory folder is the same name as `feature_name`
 
 ## License
 

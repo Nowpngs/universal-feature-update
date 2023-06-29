@@ -7,10 +7,7 @@ destination_project_path = ""
 # input path of ssh key for the destination project
 ssh_key_path = ""
 
-# input the folder name that contains the feature file
-project_name = ""
-
-# input feature name under the project folder
+# input feature name under the feature_xlsx directory in destination project folder
 feature_name = ""
 
 
@@ -19,5 +16,4 @@ UniversalUpdateFeature(
     destination_project_path=destination_project_path,
     ssh_key_path=ssh_key_path,
     feature_name=feature_name,
-    project_name=project_name,
 ).process()
