@@ -12,9 +12,6 @@ except ImportError:
 
 
 class UniversalUpdateFeature:
-    destination_project_path = ""
-    ssh_key_path = ""
-    feature_name = ""
     work_book = None
     remote_repo_name = set()
 
@@ -181,7 +178,9 @@ class UniversalUpdateFeature:
             subprocess.run(
                 ["git", "cherry-pick", row[2].value], cwd=self.destination_project_path
             )
-            ColorText.print_ok_info(f"Cherry Pick {row[2].value} Success Please Check for Conflict")
+            ColorText.print_ok_info(
+                f"Cherry Pick {row[2].value} Success Please Check for Conflict"
+            )
             log = ""
             while not log:
                 log = input(
@@ -204,9 +203,19 @@ class UniversalUpdateFeature:
                 status_cell.value = "Nothing"
                 fill_cell = PatternFill(patternType="solid", fgColor="262626")
                 status_cell.fill = fill_cell
-            # save the workbook at the same place
+            self.save_result_excel_at_desktop()
+
+    def save_result_excel_at_desktop(self):
+        # save result excel at desktop
+        try:
             self.work_book.save(
-                f"{self.destination_project_path}/feature_xlsx/{self.feature_name}/{self.feature_name}.xlsx"
+                f"{os.path.expanduser('~')}/Desktop/result_{self.feature_name}.xlsx"
+            )
+        except PermissionError:
+            raise SystemExit(
+                ColorText.color_error(
+                    f"Save result excel failed, Please close result_{self.feature_name}.xlsx"
+                )
             )
 
     def remove_remote_source(self):
