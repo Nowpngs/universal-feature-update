@@ -43,13 +43,14 @@ class UniversalUpdateFeature:
         # load feature excel
         ColorText.print_ok_info(f"Loading Feature {self.feature_name}")
         try:
+            # load work book at the destination project path
             self.work_book = load_workbook(
-                filename=f"feature_xlsx/{self.feature_name}/{self.feature_name}.xlsx"
+                f"{self.destination_project_path}/feature_xlsx/{self.feature_name}/{self.feature_name}.xlsx"
             )
         except:
             raise SystemExit(
                 ColorText.color_error(
-                    f"Feature excel file at feature_xlsx/{self.feature_name}/{self.feature_name}.xlsx not found."
+                    f"Feature excel file at Destination project path/feature_xlsx/{self.feature_name}/{self.feature_name}.xlsx not found."
                 )
             )
 
@@ -170,8 +171,39 @@ class UniversalUpdateFeature:
             raise SystemExit(ColorText.color_error("Create branch failed"))
 
     def process_cherry_pick(self):
-        for row in self.work_book["Sheet1"]["C"]:
-            print(row.value)
+        for row in self.work_book["Sheet1"]:
+            if row.row == 1:
+                continue
+            subprocess.run(
+                ["git", "cherry-pick", row[2].value], cwd=self.destination_project_path
+            )
+            ColorText.print_ok_info(f"Cherry Pick {row[2].value} Success Please Check for Conflict")
+            log = ""
+            while not log:
+                log = input(
+                    ColorText.color_warning(
+                        f"Input Code For Commit {row[2].value} [Complete[c]/Error[e]/Nothing[n]]:"
+                    )
+                )
+                if log not in ["c", "e", "n"]:
+                    log = ""
+            status_cell = self.work_book["Sheet1"].cell(row=row[2].row, column=4)
+            if log == "c":
+                status_cell.value = "Complete"
+                fill_cell = PatternFill(patternType="solid", fgColor="2E75B5")
+                status_cell.fill = fill_cell
+            elif log == "e":
+                status_cell.value = "Error"
+                fill_cell = PatternFill(patternType="solid", fgColor="C65911")
+                status_cell.fill = fill_cell
+            elif log == "n":
+                status_cell.value = "Nothing"
+                fill_cell = PatternFill(patternType="solid", fgColor="262626")
+                status_cell.fill = fill_cell
+            # save the workbook at the same place
+            self.work_book.save(
+                f"{self.destination_project_path}/feature_xlsx/{self.feature_name}/{self.feature_name}.xlsx"
+            )
 
     def remove_remote_source(self):
         # remove remote source
