@@ -8,6 +8,7 @@ Universal Feature Update is a tool that allows you to easily cherry-pick feature
 - Usage
 - Notes
 - License
+- Credit
 
 ## Installation
 
@@ -58,3 +59,4 @@ Please ensure that you have the necessary permissions and access rights to both 
 ## License
 
 This project is licensed under the MIT License.
+## CreditThis tool was inspired by Jirayu Phongrattananan.
