@@ -18,10 +18,10 @@ class UniversalUpdateFeature:
     work_book = None
     remote_repo_name = set()
 
-    def __init__(self, destination_project_path, ssh_key_path, feature_name):
+    def __init__(self, destination_project_path="?", ssh_key_path="?", feature_name="?"):
         self.destination_project_path = destination_project_path
         self.ssh_key_path = ssh_key_path
-        self.feature_name = feature_name if feature_name else "?"
+        self.feature_name = feature_name
 
     def process(self):
         self.load_feature_excel()
