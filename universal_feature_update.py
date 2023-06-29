@@ -21,7 +21,7 @@ class UniversalUpdateFeature:
     def __init__(self, destination_project_path, ssh_key_path, feature_name):
         self.destination_project_path = destination_project_path
         self.ssh_key_path = ssh_key_path
-        self.feature_name = feature_name
+        self.feature_name = feature_name if feature_name else "?"
 
     def process(self):
         self.load_feature_excel()
@@ -41,18 +41,22 @@ class UniversalUpdateFeature:
             self.work_book = load_workbook(
                 filename=f"feature_xlsx/{self.feature_name}/{self.feature_name}.xlsx"
             )
-        except FileNotFoundError:
-            raise SystemExit(ColorText.color_error("Feature excel file not found."))
+        except:
+            raise SystemExit(
+                ColorText.color_error(
+                    f"Feature excel file at feature_xlsx/{self.feature_name}/{self.feature_name}.xlsx not found."
+                )
+            )
 
     def check_path(self):
         ColorText.print_ok_info(
-            f"Cheking Destination Path {self.destination_project_path}"
+            f"Checking Destination Path {self.destination_project_path}"
         )
         # check if the path to folder exists
         if not os.path.exists(self.destination_project_path):
             raise SystemExit(ColorText.color_error("Path does not exist"))
 
-        ColorText.print_ok_info(f"Cheking SSH Key Path {self.ssh_key_path}")
+        ColorText.print_ok_info(f"Checking SSH Key Path {self.ssh_key_path}")
         # check if the path to ssh key exists
         if not os.path.exists(self.ssh_key_path):
             raise SystemExit(ColorText.color_error("Path does not exist"))
@@ -94,7 +98,7 @@ class UniversalUpdateFeature:
         for row in self.work_book["Sheet1"]["B"]:
             if row.row == 1:
                 continue
-            self.remote_repo_name.add(row.value)
+            self.remote_repo_name.add(row.value.strip())
 
         if len(self.remote_repo_name) == 0:
             raise SystemExit(
@@ -104,10 +108,20 @@ class UniversalUpdateFeature:
             )
 
     def fetch_source_origin(self):
-        ColorText.print_ok_info(f"Fetch Remote Repo")
-        # fetch and add remote for the source project
-        for index, repo_name in enumerate(self.remote_repo_name):
-            try:
+        try:
+            current_origin = subprocess.run(
+                ["git", "config", "--get", "remote.origin.url"],
+                check=True,
+                cwd=self.destination_project_path,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+
+            # fetch and add remote for the source project
+            for index, repo_name in enumerate(self.remote_repo_name):
+                ColorText.print_ok_info(f"Fetch Remote Repo From {repo_name}")
+                if repo_name == current_origin:
+                    continue
                 subprocess.run(
                     [
                         "git",
@@ -124,13 +138,11 @@ class UniversalUpdateFeature:
                     check=True,
                     cwd=self.destination_project_path,
                 )
-            except subprocess.CalledProcessError:
-                self.remove_remote_source()
-                raise SystemExit(
-                    ColorText.color_error(
-                        f"Fetch failed, Repo name: {repo_name} Not Exist"
-                    )
-                )
+        except subprocess.CalledProcessError:
+            self.remove_remote_source()
+            raise SystemExit(
+                ColorText.color_error(f"Fetch failed, Repo name: {repo_name} Not Exist")
+            )
 
     def create_new_branch_destination(self):
         ColorText.print_ok_info(f"Create New Branch {self.feature_name}")
