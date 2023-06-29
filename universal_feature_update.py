@@ -74,7 +74,7 @@ class UniversalUpdateFeature:
                 ["git", "fetch", "--all"], check=True, cwd=self.destination_project_path
             )
             subprocess.run(
-                ["git", "restore", "."], check=True, cwd=self.destination_project_path
+                ["git", "stach", "-u"], check=True, cwd=self.destination_project_path
             )
             subprocess.run(
                 ["git", "branch", "-a"], check=True, cwd=self.destination_project_path
