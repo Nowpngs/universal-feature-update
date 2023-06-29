@@ -29,15 +29,19 @@ class UniversalUpdateFeature:
         self.feature_name = feature_name
 
     def process(self):
-        self.load_feature_excel()
-        self.check_path()
-        self.fetch_destination_origin()
-        self.get_remote_repo_name()
-        self.fetch_source_origin()
-        self.create_new_branch_destination()
-        self.process_cherry_pick()
-        self.remove_remote_source()
-        ColorText.print_ok_info(f"Perfect! Operation Completed!")
+        try:
+            self.load_feature_excel()
+            self.check_path()
+            self.fetch_destination_origin()
+            self.get_remote_repo_name()
+            self.fetch_source_origin()
+            self.create_new_branch_destination()
+            self.process_cherry_pick()
+            self.remove_remote_source()
+            ColorText.print_ok_info(f"Perfect! Operation Completed!")
+        except KeyboardInterrupt:
+            self.remove_remote_source()
+            raise SystemExit(ColorText.color_error("Process terminated by user"))
 
     def load_feature_excel(self):
         # load feature excel
