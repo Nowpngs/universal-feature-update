@@ -171,8 +171,8 @@ class UniversalUpdateFeature:
             raise SystemExit(ColorText.color_error("Create branch failed"))
 
     def process_cherry_pick(self):
-        for row in self.work_book["Sheet1"]:
-            if row.row == 1:
+        for index, row in enumerate(self.work_book["Sheet1"]):
+            if index == 0:
                 continue
             subprocess.run(
                 ["git", "cherry-pick", row[2].value], cwd=self.destination_project_path
