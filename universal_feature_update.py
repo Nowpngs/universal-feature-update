@@ -94,7 +94,7 @@ class UniversalUpdateFeature:
         for row in self.work_book["Sheet1"]["B"]:
             if row.row == 1:
                 continue
-            self.remote_repo_name.add(row.value)
+            self.remote_repo_name.add(row.value.strip())
 
         if len(self.remote_repo_name) == 0:
             raise SystemExit(
@@ -105,9 +105,20 @@ class UniversalUpdateFeature:
 
     def fetch_source_origin(self):
         ColorText.print_ok_info(f"Fetch Remote Repo")
-        # fetch and add remote for the source project
-        for index, repo_name in enumerate(self.remote_repo_name):
-            try:
+
+        try:
+            current_origin = subprocess.run(
+                ["git", "config", "--get", "remote.origin.url"],
+                check=True,
+                cwd=self.destination_project_path,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+
+            # fetch and add remote for the source project
+            for index, repo_name in enumerate(self.remote_repo_name):
+                if repo_name == current_origin:
+                    continue
                 subprocess.run(
                     [
                         "git",
@@ -124,13 +135,11 @@ class UniversalUpdateFeature:
                     check=True,
                     cwd=self.destination_project_path,
                 )
-            except subprocess.CalledProcessError:
-                self.remove_remote_source()
-                raise SystemExit(
-                    ColorText.color_error(
-                        f"Fetch failed, Repo name: {repo_name} Not Exist"
-                    )
-                )
+        except subprocess.CalledProcessError:
+            self.remove_remote_source()
+            raise SystemExit(
+                ColorText.color_error(f"Fetch failed, Repo name: {repo_name} Not Exist")
+            )
 
     def create_new_branch_destination(self):
         ColorText.print_ok_info(f"Create New Branch {self.feature_name}")
