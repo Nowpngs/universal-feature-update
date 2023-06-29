@@ -4,7 +4,6 @@ from color_text import ColorText
 
 try:
     from openpyxl.reader.excel import load_workbook
-    from openpyxl.styles import PatternFill
 except ImportError:
     raise SystemExit(
         "Process terminated: openpyxl module not found. Please make sure it is installed."
