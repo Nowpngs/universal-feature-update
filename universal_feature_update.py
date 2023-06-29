@@ -10,6 +10,8 @@ except ImportError:
         "Process terminated: openpyxl module not found. Please make sure it is installed."
     )
 
+from utils import adding_status_for_result_excel
+
 
 class UniversalUpdateFeature:
     work_book = None
@@ -191,18 +193,7 @@ class UniversalUpdateFeature:
                 if log not in ["c", "e", "n"]:
                     log = ""
             status_cell = self.work_book["Sheet1"].cell(row=row[2].row, column=4)
-            if log == "c":
-                status_cell.value = "Complete"
-                fill_cell = PatternFill(patternType="solid", fgColor="2E75B5")
-                status_cell.fill = fill_cell
-            elif log == "e":
-                status_cell.value = "Error"
-                fill_cell = PatternFill(patternType="solid", fgColor="C65911")
-                status_cell.fill = fill_cell
-            elif log == "n":
-                status_cell.value = "Nothing"
-                fill_cell = PatternFill(patternType="solid", fgColor="262626")
-                status_cell.fill = fill_cell
+            status_cell.value, status_cell.fill = adding_status_for_result_excel(log)
             self.save_result_excel_at_desktop()
 
     def save_result_excel_at_desktop(self):
