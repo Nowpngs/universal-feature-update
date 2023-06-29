@@ -51,7 +51,6 @@ Please ensure that you have the necessary permissions and access rights to both 
 
 ## Notes
 
-- This tool currently does not support cherry-picking from your own repository. However, you can use it to cherry-pick features from other GitHub or Gitlab repositories.
 - Make sure to provide accurate and valid paths for the `destination_project_path` and `ssh_key_path` variables to ensure successful deployment.
 - The `feature_name` should match the name of the feature file located in the `feature_xlsx` in the destination project folder.
 - Make sure the excel file and directory folder is the same name as `feature_name`
