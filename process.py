@@ -4,7 +4,7 @@ from universal_feature_update import UniversalUpdateFeature
 # input path of the destination project
 destination_project_path = ""
 
-# input path of ssh key for the destination project
+# input path of ssh key for the destination project (cd ~/.ssh/)
 ssh_key_path = ""
 
 # input feature name under the feature_xlsx directory in destination project folder

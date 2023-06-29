@@ -46,13 +46,13 @@ class UniversalUpdateFeature:
 
     def check_path(self):
         ColorText.print_ok_info(
-            f"Cheking Destination Path {self.destination_project_path}"
+            f"Checking Destination Path {self.destination_project_path}"
         )
         # check if the path to folder exists
         if not os.path.exists(self.destination_project_path):
             raise SystemExit(ColorText.color_error("Path does not exist"))
 
-        ColorText.print_ok_info(f"Cheking SSH Key Path {self.ssh_key_path}")
+        ColorText.print_ok_info(f"Checking SSH Key Path {self.ssh_key_path}")
         # check if the path to ssh key exists
         if not os.path.exists(self.ssh_key_path):
             raise SystemExit(ColorText.color_error("Path does not exist"))
@@ -104,8 +104,6 @@ class UniversalUpdateFeature:
             )
 
     def fetch_source_origin(self):
-        ColorText.print_ok_info(f"Fetch Remote Repo")
-
         try:
             current_origin = subprocess.run(
                 ["git", "config", "--get", "remote.origin.url"],
@@ -117,6 +115,7 @@ class UniversalUpdateFeature:
 
             # fetch and add remote for the source project
             for index, repo_name in enumerate(self.remote_repo_name):
+                ColorText.print_ok_info(f"Fetch Remote Repo From {repo_name}")
                 if repo_name == current_origin:
                     continue
                 subprocess.run(
