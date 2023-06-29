@@ -8,7 +8,7 @@ destination_project_path = ""
 ssh_key_path = ""
 
 # input feature name under the feature_xlsx directory in destination project folder
-feature_name = ""
+feature_name = "1.0.0-example_feature"
 
 
 # run the process

@@ -18,7 +18,12 @@ class UniversalUpdateFeature:
     work_book = None
     remote_repo_name = set()
 
-    def __init__(self, destination_project_path="?", ssh_key_path="?", feature_name="?"):
+    def __init__(
+        self,
+        destination_project_path="?",
+        ssh_key_path="?",
+        feature_name="1.0.0-example_feature",
+    ):
         self.destination_project_path = destination_project_path
         self.ssh_key_path = ssh_key_path
         self.feature_name = feature_name
