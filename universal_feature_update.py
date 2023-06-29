@@ -79,13 +79,15 @@ class UniversalUpdateFeature:
                 ["git", "fetch", "--all"], check=True, cwd=self.destination_project_path
             )
             subprocess.run(
-                ["git", "stach", "-u"], check=True, cwd=self.destination_project_path
+                ["git", "stash", "-u"], check=True, cwd=self.destination_project_path
             )
             subprocess.run(
                 ["git", "branch", "-a"], check=True, cwd=self.destination_project_path
             )
 
-            selected_branch = input("Input Select Branch (Enter for origin/main):")
+            selected_branch = input(
+                ColorText.color_warning("Input Select Branch (Enter for origin/main):")
+            )
             if not selected_branch:
                 selected_branch = "origin/main"
 

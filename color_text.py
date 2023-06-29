@@ -6,12 +6,16 @@ class ColorText:
 
     @staticmethod
     def print_ok_info(text):
-        print(f"{ColorText.GREEN}INFO:{ColorText.END} {text}\n")
+        print(f"\n{ColorText.GREEN}INFO:{ColorText.END} {text}")
 
     @staticmethod
     def print_warning_info(text):
-        print(f"{ColorText.YELLOW}WARNING:{ColorText.END} {text}\n")
+        print(f"\n{ColorText.YELLOW}WARNING:{ColorText.END} {text}")
 
     @staticmethod
     def color_error(text):
-        return f"{ColorText.RED}ERROR:{ColorText.END} {text}\n"
+        return f"\n{ColorText.RED}ERROR:{ColorText.END} {text}"
+
+    @staticmethod
+    def color_warning(text):
+        return f"\n{ColorText.YELLOW}WARNING:{ColorText.END} {text}"
