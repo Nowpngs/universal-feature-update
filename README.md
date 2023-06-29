@@ -59,4 +59,7 @@ Please ensure that you have the necessary permissions and access rights to both 
 ## License
 
 This project is licensed under the MIT License.
-## CreditThis tool was inspired by Jirayu Phongrattananan.
+
+## Credit
+
+This tool was inspired by Jirayu Phongrattananan.
