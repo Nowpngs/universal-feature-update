@@ -21,7 +21,7 @@ class UniversalUpdateFeature:
     def __init__(self, destination_project_path, ssh_key_path, feature_name):
         self.destination_project_path = destination_project_path
         self.ssh_key_path = ssh_key_path
-        self.feature_name = feature_name
+        self.feature_name = feature_name if feature_name else "?"
 
     def process(self):
         self.load_feature_excel()
@@ -41,8 +41,12 @@ class UniversalUpdateFeature:
             self.work_book = load_workbook(
                 filename=f"feature_xlsx/{self.feature_name}/{self.feature_name}.xlsx"
             )
-        except FileNotFoundError:
-            raise SystemExit(ColorText.color_error("Feature excel file not found."))
+        except:
+            raise SystemExit(
+                ColorText.color_error(
+                    f"Feature excel file at feature_xlsx/{self.feature_name}/{self.feature_name}.xlsx not found."
+                )
+            )
 
     def check_path(self):
         ColorText.print_ok_info(
